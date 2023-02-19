@@ -20,17 +20,15 @@ class TrainingPipeline:
         except Exception as e:
             raise CustomException(e, sys)
 
-def main():
-    try:
-        training_pipeline_config = TrainingPipelineConfig()
-        training_pipeline = TrainingPipeline(training_pipeline_config=training_pipeline_config)
-        data_ingestion_artifact = training_pipeline.start_data_ingestion()
-        logger.info(f"Data ingestion artifact: {data_ingestion_artifact}")
-    except Exception as e:
-        raise CustomException(e, sys)
+    def start(self):
+        try:
+            data_ingestion_artifact = self.start_data_ingestion()   
+
+        except Exception as e:
+            raise CustomException(e, sys)
 
 if __name__ == "__main__":
     try:
-        main()
+        pass
     except Exception as e:
         logger.exception(e)
