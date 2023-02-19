@@ -1,6 +1,6 @@
 from typing import List
 from pyspark.sql.types import TimestampType, StringType, FloatType, StructType, StructField
-from finance_complaint.exception import FinanceException
+from src.exception import CustomException
 import os, sys
 
 from pyspark.sql import DataFrame
@@ -50,3 +50,37 @@ class FinanceDataSchema:
 
         except Exception as e:
             raise CustomException(e, sys) from e
+
+    @property
+    def target_column(self) -> str:
+        return self.col_consumer_disputed
+
+    @property
+    def one_hot_encoding_features(self) -> List[str]:
+        features = [
+            self.col_company_response,
+            self.col_consumer_consent_provided,
+            self.col_submitted_via,
+        ]
+        return features
+
+    @property
+    def required_columns(self) -> List[str]:
+        features = [self.target_column] + self.one_hot_encoding_features + self.tfidf_features + \
+                   [self.col_date_sent_to_company, self.col_date_received]
+        return features
+
+    @property
+    def tfidf_features(self) -> List[str]:
+        features = [
+            self.col_issue
+        ]
+        return features
+
+    @property
+    def unwanted_columns(self) -> List[str]:
+        features = [
+            self.col_complaint_id,
+            self.col_sub_product, self.col_complaint_what_happened]
+
+        return features
