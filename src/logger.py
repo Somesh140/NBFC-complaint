@@ -2,12 +2,13 @@ import logging
 from datetime import datetime
 import os
 import pandas as pd
-from .constant import TIMESTAMP
+from src.constant import TIMESTAMP
+import shutil
 
 LOG_DIR="logs"
 
 def get_log_file_name():
-    return "log_{TIMESTAMP}.log".format(TIMESTAMP)
+    return "log_{TIMESTAMP}.log".format(TIMESTAMP=TIMESTAMP)
 
 LOG_FILE_NAME = get_log_file_name()
 
@@ -23,4 +24,4 @@ logging.basicConfig(filename=LOG_FILE_PATH,
                     level=logging.INFO
                     )
 
-logger = logging.getLogger("complaintlogger")
+logger = logging.getLogger()
