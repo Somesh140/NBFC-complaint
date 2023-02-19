@@ -22,7 +22,7 @@ class DataIngestionMetadata:
                 to_date=to_date,
                 data_file_path=data_file_path
             )
-            write_yaml_file(file_path=self.metadata_file_path,data=metadata_info.yo_dict())
+            write_yaml_file(file_path=self.metadata_file_path,data=metadata_info.to_dict())
         except Exception as e:
             raise CustomException(e,sys)
 

@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from src.constant import TIMESTAMP
 import os 
 from datetime import datetime
+from .metadata_entity import DataIngestionMetadata
+from src.exception import CustomException
 
 DATA_INGESTION_DIR = "data_ingestion"
 DATA_INGESTION_DOWNLOADED_DATA_DIR = "downloaded_files"
@@ -9,7 +11,7 @@ DATA_INGESTION_FILE_NAME = "finance_complaint"
 DATA_INGESTION_FEATURE_STORE_DIR = "feature_store"
 DATA_INGESTION_FAILED_DIR = "failed_downloaded_files"
 DATA_INGESTION_METADATA_FILE_NAME = "meta_info.yaml"
-DATA_INGESTION_MIN_START_DATE = "2019-01-01"
+DATA_INGESTION_MIN_START_DATE = "2022-12-01"
 DATA_INGESTION_DATA_SOURCE_URL = f"https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/" \
                       f"?date_received_max=<todate>&date_received_min=<fromdate>" \
                       f"&field=all&format=json"
@@ -53,6 +55,7 @@ class DataIngestionConfig:
                 self.from_date = metadata_info.to_date
 
             self.download_dir=os.path.join(self.data_ingestion_dir, DATA_INGESTION_DOWNLOADED_DATA_DIR)
+            self.failed_dir=os.path.join(self.data_ingestion_dir, DATA_INGESTION_FAILED_DIR)
             self.file_name = DATA_INGESTION_FILE_NAME
             self.feature_store_dir=os.path.join(data_ingestion_master_dir, DATA_INGESTION_FEATURE_STORE_DIR)
             self.datasource_url = DATA_INGESTION_DATA_SOURCE_URL
