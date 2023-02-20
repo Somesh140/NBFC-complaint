@@ -110,7 +110,7 @@ class FinanceDataSchema:
 
     @property
     def tf_tfidf_features(self) -> List[str]:
-        return [f"tf_{col}" for col in self.tfidf_feature]
+        return [f"tf_{col}" for col in self.tfidf_features]
 
     @property
     def input_features(self) -> List[str]:
