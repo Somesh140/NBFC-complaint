@@ -1,6 +1,8 @@
-from src.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact)
-from src.entity.config_entity import (DataIngestionConfig,TrainingPipelineConfig,DataValidationConfig,DataTransformationConfig)
-from src.component import (DataIngestion,DataValidation,DataTransformation)
+from src.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact,
+                                        ModelTrainerArtifact)
+from src.entity.config_entity import (DataIngestionConfig,TrainingPipelineConfig,DataValidationConfig,DataTransformationConfig,\
+                                        ModelTrainerConfig)
+from src.component import (DataIngestion,DataValidation,DataTransformation,ModelTrainer)
 from src.logger import logger
 from src.exception import CustomException
 import sys
@@ -44,12 +46,25 @@ class TrainingPipeline:
             raise CustomException(e, sys)
 
 
+    def start_model_trainer(self, data_transformation_artifact: DataTransformationArtifact) -> ModelTrainerArtifact:
+        try:
+            model_trainer_config = ModelTrainerConfig(training_pipeline_config=self.training_pipeline_config)
+            model_trainer = ModelTrainer(data_transformation_artifact=data_transformation_artifact,
+                                         model_trainer_config=model_trainer_config
+                                         )
+            model_trainer_artifact = model_trainer.initiate_model_training()
+            return model_trainer_artifact
+        except Exception as e:
+            raise CustomException(e, sys)
+
+
     def start(self):
         try:
             data_ingestion_artifact = self.start_data_ingestion()   
             data_validation_artifact = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
             data_transformation_artifact = self.start_data_transformation(
                 data_validation_artifact=data_validation_artifact)
+            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
         except Exception as e:
             raise CustomException(e, sys)
 
