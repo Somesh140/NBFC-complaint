@@ -1,8 +1,8 @@
 from src.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact,
-                                        ModelTrainerArtifact)
+                                        ModelTrainerArtifact,ModelEvaluationArtifact)
 from src.entity.config_entity import (DataIngestionConfig,TrainingPipelineConfig,DataValidationConfig,DataTransformationConfig,\
-                                        ModelTrainerConfig)
-from src.component import (DataIngestion,DataValidation,DataTransformation,ModelTrainer)
+                                        ModelTrainerConfig, ModelEvaluationConfig)
+from src.component import (DataIngestion,DataValidation,DataTransformation,ModelTrainer,ModelEvaluation)
 from src.logger import logger
 from src.exception import CustomException
 import sys
@@ -57,6 +57,17 @@ class TrainingPipeline:
         except Exception as e:
             raise CustomException(e, sys)
 
+    def start_model_evaluation(self, data_validation_artifact, model_trainer_artifact) -> ModelEvaluationArtifact:
+        try:
+            model_eval_config = ModelEvaluationConfig(training_pipeline_config=self.training_pipeline_config)
+            model_eval = ModelEvaluation(data_validation_artifact=data_validation_artifact,
+                                         model_trainer_artifact=model_trainer_artifact,
+                                         model_eval_config=model_eval_config
+                                         )
+            return model_eval.initiate_model_evaluation()
+        except Exception as e:
+            raise CustomException(e, sys)
+
 
     def start(self):
         try:
@@ -65,6 +76,12 @@ class TrainingPipeline:
             data_transformation_artifact = self.start_data_transformation(
                 data_validation_artifact=data_validation_artifact)
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
+            model_eval_artifact = self.start_model_evaluation(data_validation_artifact=data_validation_artifact,
+                                                              model_trainer_artifact=model_trainer_artifact
+                                                              )
+
+            if model_eval_artifact.model_accepted:
+                pass
         except Exception as e:
             raise CustomException(e, sys)
 
