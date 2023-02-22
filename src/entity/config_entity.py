@@ -29,6 +29,22 @@ DATA_TRANSFORMATION_FILE_NAME = "finance_complaint"
 DATA_TRANSFORMATION_TEST_DIR = "test"
 DATA_TRANSFORMATION_TEST_SIZE = 0.3
 
+MODEL_TRAINER_BASE_ACCURACY = 0.6
+MODEL_TRAINER_DIR = "model_trainer"
+MODEL_TRAINER_TRAINED_MODEL_DIR = "trained_model"
+MODEL_TRAINER_MODEL_NAME = "finance_estimator"
+MODEL_TRAINER_LABEL_INDEXER_DIR = "label_indexer"
+MODEL_TRAINER_MODEL_METRIC_NAMES = ['f1',
+                                    "weightedPrecision",
+                                    "weightedRecall",
+                                    "weightedTruePositiveRate",
+                                    "weightedFalsePositiveRate",
+                                    "weightedFMeasure",
+                                    "truePositiveRateByLabel",
+                                    "falsePositiveRateByLabel",
+                                    "precisionByLabel",
+                                    "recallByLabel",
+                                    "fMeasureByLabel"]
 
 #Training pipeline config
 @dataclass
@@ -104,3 +120,17 @@ class DataTransformationConfig:
             self.test_size = DATA_TRANSFORMATION_TEST_SIZE
         except Exception as e:
             raise CustomException(e,sys)
+
+class ModelTrainerConfig:
+
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig) -> None:
+        model_trainer_dir = os.path.join(training_pipeline_config.artifact_dir,
+                                             MODEL_TRAINER_DIR)
+        self.trained_model_file_path = os.path.join(model_trainer_dir, 
+        MODEL_TRAINER_TRAINED_MODEL_DIR, MODEL_TRAINER_MODEL_NAME)
+        self.label_indexer_model_dir = os.path.join(
+            model_trainer_dir, MODEL_TRAINER_LABEL_INDEXER_DIR
+        )
+        self.base_accuracy = MODEL_TRAINER_BASE_ACCURACY
+        self.metric_list = MODEL_TRAINER_MODEL_METRIC_NAMES
+
