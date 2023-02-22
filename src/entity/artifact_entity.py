@@ -64,3 +64,20 @@ class ModelTrainerArtifact:
             return response
         except Exception as e:
             raise e
+
+class ModelEvaluationArtifact:
+
+    def __init__(self, model_accepted, changed_accuracy, trained_model_path, best_model_path, active,*args,**kwargs):
+        self.model_accepted = model_accepted
+        self.changed_accuracy = changed_accuracy
+        self.trained_model_path = trained_model_path
+        self.best_model_path = best_model_path
+        self.active = active
+        self.created_timestamp = datetime.now()
+
+    def to_dict(self):
+        return  self.__dict__
+        
+
+    def __str__(self):
+        return str(self.to_dict())

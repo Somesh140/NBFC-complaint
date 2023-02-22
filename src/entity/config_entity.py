@@ -46,6 +46,13 @@ MODEL_TRAINER_MODEL_METRIC_NAMES = ['f1',
                                     "recallByLabel",
                                     "fMeasureByLabel"]
 
+MODEL_EVALUATION_DIR = "model_evaluation"
+MODEL_EVALUATION_REPORT_DIR = "report"
+MODEL_EVALUATION_REPORT_FILE_NAME = "evaluation_report"
+MODEL_EVALUATION_THRESHOLD_VALUE = 0.002
+MODEL_EVALUATION_METRIC_NAMES = ['f1',]
+
+
 #Training pipeline config
 @dataclass
 class TrainingPipelineConfig:
@@ -134,3 +141,18 @@ class ModelTrainerConfig:
         self.base_accuracy = MODEL_TRAINER_BASE_ACCURACY
         self.metric_list = MODEL_TRAINER_MODEL_METRIC_NAMES
 
+class ModelEvaluationConfig:
+
+    def __init__(self, training_pipeline_config:TrainingPipelineConfig) -> None:
+        
+        self.model_evaluation_dir = os.path.join(training_pipeline_config.artifact_dir,
+                                                MODEL_EVALUATION_DIR)
+
+        self.model_evaluation_report_file_path = os.path.join(
+                self.model_evaluation_dir, 
+                MODEL_EVALUATION_REPORT_DIR, 
+                MODEL_EVALUATION_REPORT_FILE_NAME
+            )
+
+        self.threshold=MODEL_EVALUATION_THRESHOLD_VALUE
+        self.metric_list=MODEL_EVALUATION_METRIC_NAMES
