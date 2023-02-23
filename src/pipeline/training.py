@@ -1,8 +1,8 @@
 from src.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact,
-                                        ModelTrainerArtifact,ModelEvaluationArtifact)
+                                        ModelTrainerArtifact,ModelEvaluationArtifact,ModelPusherArtifact)
 from src.entity.config_entity import (DataIngestionConfig,TrainingPipelineConfig,DataValidationConfig,DataTransformationConfig,\
-                                        ModelTrainerConfig, ModelEvaluationConfig)
-from src.component import (DataIngestion,DataValidation,DataTransformation,ModelTrainer,ModelEvaluation)
+                                        ModelTrainerConfig, ModelEvaluationConfig,ModelPusherConfig)
+from src.component import (DataIngestion,DataValidation,DataTransformation,ModelTrainer,ModelEvaluation,ModelPusher)
 from src.logger import logger
 from src.exception import CustomException
 import sys
@@ -68,6 +68,16 @@ class TrainingPipeline:
         except Exception as e:
             raise CustomException(e, sys)
 
+    def start_model_pusher(self, model_trainer_artifact: ModelTrainerArtifact):
+        try:
+
+            model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
+            model_pusher = ModelPusher(model_trainer_artifact=model_trainer_artifact,
+                                       model_pusher_config=model_pusher_config
+                                       )
+            return model_pusher.initiate_model_pusher()
+        except Exception as e:
+            raise CustomException(e, sys)
 
     def start(self):
         try:
@@ -81,7 +91,7 @@ class TrainingPipeline:
                                                               )
 
             if model_eval_artifact.model_accepted:
-                pass
+                self.start_model_pusher(model_trainer_artifact=model_trainer_artifact)
         except Exception as e:
             raise CustomException(e, sys)
 
