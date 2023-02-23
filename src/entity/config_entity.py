@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from src.constant import TIMESTAMP
-import os 
+import os,sys
 from datetime import datetime
 from .metadata_entity import DataIngestionMetadata
 from src.exception import CustomException
@@ -167,3 +167,15 @@ class ModelPusherConfig:
         self.pusher_model_dir = os.path.join(training_pipeline_config.artifact_dir,
                                                 MODEL_PUSHER_DIR,"model",MODEL_PUSHER_MODEL_NAME)
         self.saved_model_dir = MODEL_PUSHER_SAVED_MODEL_DIRS
+
+class BatchPredictionConfig:
+
+    def __init__(self):
+        try:
+            self.inbox_dir= os.path.join("data","inbox")
+            self.outbox_dir= os.path.join("data","outbox")
+            self.archive_dir= os.path.join("data","archive")
+            os.makedirs(self.outbox_dir,exist_ok=True)
+            os.makedirs(self.archive_dir,exist_ok=True)
+        except Exception as e:
+            raise CustomException(e,sys)
