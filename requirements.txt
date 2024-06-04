@@ -1,4 +1,4 @@
-requests==2.31.0
+requests==2.32.2
 jupyterlab==3.6.7
 pyspark==3.2.2
 PyYAML==6.0
