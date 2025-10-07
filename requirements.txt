@@ -1,5 +1,5 @@
 requests==2.32.4
-jupyterlab==3.6.8
+jupyterlab==4.4.8
 pyspark==3.3.2
 PyYAML==6.0
 ipykernel==6.15.0
