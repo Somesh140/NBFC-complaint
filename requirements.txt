@@ -1,6 +1,6 @@
 requests==2.33.0
 jupyterlab==4.5.10
-pyspark==3.3.2
+pyspark==3.4.4
 PyYAML==6.0
 ipykernel==6.15.0
 boto3==1.24.82
